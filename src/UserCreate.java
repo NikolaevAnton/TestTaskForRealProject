@@ -14,13 +14,14 @@ public class UserCreate {
     public static void main(String[] args) {
         users.addAll(TestUser.someUsers());
         int commandNumber = 0;
-        while (commandNumber != 5){
+        while (commandNumber != 6){
             System.out.println("Введите комманду:");
             System.out.println("1 - Ввести нового пользователя" +
                     "\t2 - Удалить" +
                     "\t3 - Именить" +
                     "\t4 - Список" +
-                    "\t5 - Выйти");
+                    "\t5 - Поиск по имени" +
+                    "\t6 - Выйти");
 
             try {
                 commandNumber = Integer.parseInt(reader.readLine());
@@ -44,10 +45,42 @@ public class UserCreate {
                     listUser();
                     break;
                 case 5:
+                    seacherUser();
+                    break;
+                case 6:
                     break;
             }
 
         }
+    }
+
+    private static void seacherUser() {
+        System.out.println("--Поиск по имени--");
+        String name = "";
+        while (true) {
+            try {
+                System.out.print("Введите имя: ");
+                name = reader.readLine();
+            } catch (IOException ignor) {
+                continue;
+            }
+            break;
+        }
+        ArrayList<User> indexName = new ArrayList<>();
+        for(User user : users){
+            String tempName = user.getName();
+            if (tempName.equals(name)) {
+                indexName.add(user);
+            }
+        }
+        if (indexName.size() == 0){
+            System.out.println("--Извините, пользователи с таким именем не обнаружены.--");
+        } else {
+            for(User user : indexName){
+                System.out.println(user);
+            }
+        }
+
     }
 
     private static void changeUser() {
@@ -62,7 +95,7 @@ public class UserCreate {
         System.out.print("--Ввод данных--");
         User newUser = createData();
         newUser.setIDwithoutChange(changed.getID());
-        users.set(index,newUser);
+        users.set(index, newUser);
     }
 
     private static void delateUser() {
@@ -113,6 +146,7 @@ public class UserCreate {
             System.out.println(user);
         }
     }
+
 
     private static void createUser() {
         User user = createData();
