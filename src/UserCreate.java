@@ -8,11 +8,11 @@ import java.util.Arrays;
  * Created by nikolaev on 25.04.2016.
  */
 public class UserCreate {
-    static ArrayList<User> users = new ArrayList<>();
+    //static ArrayList<User> users = new ArrayList<>();
     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     public static void main(String[] args) {
-        users.addAll(TestUser.someUsers());
+        DataUser.addAll(TestUser.someUsers());
         int commandNumber = 0;
         while (commandNumber != 6){
             System.out.println("Введите комманду:");
@@ -67,7 +67,7 @@ public class UserCreate {
             break;
         }
         ArrayList<User> indexName = new ArrayList<>();
-        for(User user : users){
+        for(User user : DataUser.getUsers()){
             String tempName = user.getName();
             if (tempName.equals(name)) {
                 indexName.add(user);
@@ -84,23 +84,24 @@ public class UserCreate {
     }
 
     private static void changeUser() {
-        if(users.size() == 0) {
+        if(DataUser.getSize() == 0) {
             System.out.println("--Нет пользователей--");
             return;
         }
         System.out.println("--Изменение пользователя--");
         int index = seacher();
-        User changed = users.get(index);
+        User changed = DataUser.getUser(index);
         System.out.println(changed);
         System.out.print("--Ввод данных--");
         User newUser = createData();
         newUser.setIDwithoutChange(changed.getID());
-        users.set(index, newUser);
+        DataUser.removeUser(changed);
+        DataUser.addUser(index,newUser);
     }
 
     private static void delateUser() {
         System.out.println("--Удаление пользователя--");
-        users.remove(seacher());
+        DataUser.removeUserThrowIndex(seacher());
     }
 
     private static int seacher(){
@@ -126,9 +127,9 @@ public class UserCreate {
             if (!Character.isDigit(c)) throw new ValidatorException();
         }
         int valid = Integer.parseInt(temp);
-        int[] arrayID = new int[users.size()];
+        int[] arrayID = new int[DataUser.getSize()];
         int arrIndex = 0;
-        for (User user : users){
+        for (User user : DataUser.getUsers()){
             arrayID[arrIndex++] = user.getID();
         }
         int validIndex = Arrays.binarySearch(arrayID,valid);
@@ -138,11 +139,11 @@ public class UserCreate {
 
 
     private static void listUser() {
-        if(users.size() == 0) {
+        if(DataUser.getSize() == 0) {
             System.out.println("--Нет пользователей--");
             return;
         }
-        for(User user : users){
+        for(User user : DataUser.getUsers()){
             System.out.println(user);
         }
     }
@@ -150,7 +151,7 @@ public class UserCreate {
 
     private static void createUser() {
         User user = createData();
-        users.add(user);
+        DataUser.addUser(user);
     }
 
     private static User createData() {
